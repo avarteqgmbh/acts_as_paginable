@@ -1,6 +1,16 @@
-h1 0.4.0
+h1. 0.4.7
 
-* Rails 3 compatability.
+* handle params to paginate as Hash with indifferent access
+* Decide through table definition if a given paginable param is a scope or a attribute to query
+
+h1. 0.4.1
+
+* Symbolize params to build pagination
+* added options hash which will be forwarded to will_paginate
+
+h1. 0.4.0
+
+* Rails 3 compatibility.
 
 h1. 0.3.0
 

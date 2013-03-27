@@ -1,12 +1,6 @@
 module Avarteq
   module Paginator
-
-    def self.included(base)      
-      base.extend(ClassMethods)
-      
-      # Named scope so that records can be ordered like this: MyClass.scoped_by_attr.order("id DESC")
-      #base.send(:scope, :order, lambda {|order| { :order => order } })
-    end
+    extend ActiveSupport::Concern
 
     module ClassMethods
 
@@ -41,19 +35,34 @@ module Avarteq
       def chain_scopes(params, per_page)
         result = self
         self.paginable_scopes.each do |scope_name|
+          params = params.with_indifferent_access
           param_name = scope_name.to_s + self.paginable_params_suffix.to_s          
           param_name = param_name.to_sym
           if params[param_name] && !params[param_name].blank? then
             args    = params[param_name]
-            scope   = (self.paginable_scope_prefix + scope_name.to_s ).to_sym
-            result  = result.send(scope, args)
+
+            if self.column_names.include?(param_name.to_s)
+              result = chain_attribute_query(result, param_name, args)
+            else
+              result = chain_scope_query(result, scope_name, args)
+            end           
           end
         end
         result = result.order(params[:order]) if params[:order] && !params[:order].empty?
         result
-      end
-    end
-  end
-end
+      end # #chain_scopes
+
+      def chain_attribute_query(result, scope_name, args)
+        result  = result.where(scope_name.to_sym => args)
+      end # #chain_attribute_query
+
+      def chain_scope_query(result, scope_name, args)
+        scope   = (self.paginable_scope_prefix + scope_name.to_s ).to_sym
+        return result.send(scope, args)
+      end # #chain_scope_query
+    end # ClassMethods
+  end # Paginator 
+end # Avarteq
 
 ActiveRecord::Base.send :include, Avarteq::Paginator
+
