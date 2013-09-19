@@ -20,19 +20,21 @@ module Avarteq
       # * <tt>params</tt>     Parameters which should be try to paginate
       # * <tt>per_page</tt>   count of entries per page
       # * <tt>options</tt>    additional options for the will_paginate plugin
-      def atq_paginate(params, per_page, options = {})
+      def atq_paginate(params, per_page = 20, options = {})
         result = chain_scopes(params, per_page)
-        result.paginate(:page => params[:page], :per_page => per_page)
 
-        will_paginate_arguments = options.merge({
-          :page     => params[:page],
-          :per_page => per_page
-        })
-        result.paginate(will_paginate_arguments)
+        # use kaminari
+        if defined? Kaminari
+          result.page(params[:page]).per(per_page)
+
+          # use will_paginate
+        else
+          result.paginate(:page => params[:page], :per_page => per_page)
+        end
       end
 
       # Chains scopes as given by params but does not invoke paginate.
-      def chain_scopes(params, per_page)
+      def chain_scopes(params, per_page = 20)
         result = self
         self.paginable_scopes.each do |scope_name|
           params = params.with_indifferent_access

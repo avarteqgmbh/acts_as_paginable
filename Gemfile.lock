@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     acts_as_paginable (0.4.7)
-      will_paginate (= 3.0.pre)
+      will_paginate (>= 3.0)
 
 GEM
   remote: http://rubygems.org/
@@ -34,7 +34,7 @@ GEM
       json (~> 1.4)
     thoughtbot-shoulda (2.11.1)
     tzinfo (0.3.37)
-    will_paginate (3.0.pre)
+    will_paginate (3.0.5)
 
 PLATFORMS
   ruby

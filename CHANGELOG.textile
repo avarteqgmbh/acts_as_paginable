@@ -1,3 +1,7 @@
+h1. 0.5.0
+
+* changed dependency from will_paginate to kaminari
+
 h1. 0.4.7
 
 * handle params to paginate as Hash with indifferent access
