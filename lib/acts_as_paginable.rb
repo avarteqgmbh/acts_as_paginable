@@ -24,7 +24,7 @@ module Avarteq
         result = chain_scopes(params, per_page)
 
         # use kaminari
-        if defined? Kaminari
+        if defined? Kaminari and result.respond_to?(:per)
           result.page(params[:page]).per(per_page)
 
           # use will_paginate
