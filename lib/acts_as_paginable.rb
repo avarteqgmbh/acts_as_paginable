@@ -37,7 +37,7 @@ module Avarteq
       def chain_scopes(params, per_page = 20)
         result = self
         self.paginable_scopes.each do |scope_name|
-          params = params.with_indifferent_access
+          params = params.with_indifferent_access if params.respond_to?(:with_indifferent_access)
           param_name = scope_name.to_s + self.paginable_params_suffix.to_s          
           param_name = param_name.to_sym
           if params[param_name] && !params[param_name].blank? then
